@@ -43,3 +43,5 @@ GitHub Pages deploy via GitHub Actions workflow at `.github/workflows/deploy.yml
 ## License
 
 All rights reserved. Demo only — no license granted for reuse or reproduction.
+
+<!-- pages-rerun: trigger deploy -->
