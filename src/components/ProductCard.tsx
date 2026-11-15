@@ -28,12 +28,15 @@ export default function ProductCard({ product }: ProductCardProps) {
         onClick={handleOpenModal}
         aria-label={`View ${product.name}`}
       >
-        <span className="product-card__monogram">{productMonogram(product)}</span>
+        {product.badge ? <span className="product-card__badge">{product.badge}</span> : null}
+        <span className="product-card__monogram" aria-hidden="true">{productMonogram(product)}</span>
+        <span className="product-card__tile-name">
+          <span className="product-card__category">{product.category}</span>
+          <span className="product-card__name">{product.name}</span>
+        </span>
       </button>
 
       <div className="product-card__meta">
-        <p className="product-card__category">{product.category}</p>
-        <h3 className="product-card__name">{product.name}</h3>
         <p className="product-card__price">${product.price.toFixed(2)}</p>
       </div>
 

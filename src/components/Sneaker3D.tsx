@@ -13,6 +13,38 @@ interface SneakerRigProps {
   reducedMotion: boolean
 }
 
+/** Static volt line-art sneaker used as the WebGL fallback. */
+function SneakerLineArt() {
+  return (
+    <svg
+      viewBox="0 0 220 120"
+      role="img"
+      aria-label="Sneaker line illustration"
+      className="hero__fallback-art"
+    >
+      {/* sole */}
+      <path
+        d="M14 86 C60 92 120 92 206 80 C210 88 208 96 196 100 C120 108 52 104 16 100 C6 96 8 90 14 86 Z"
+        fill="none"
+        stroke={VOLT}
+        strokeWidth="3"
+        strokeLinejoin="round"
+      />
+      {/* upper */}
+      <path
+        d="M30 84 C34 60 52 46 84 40 C110 35 132 40 150 54 C172 66 190 72 204 76"
+        fill="none"
+        stroke={VOLT}
+        strokeWidth="3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      {/* check */}
+      <path d="M70 66 L94 78 L126 44" fill="none" stroke={VOLT} strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
 function SneakerRig({ reducedMotion }: SneakerRigProps) {
   const groupRef = useRef<THREE.Group>(null)
   const pointer = useThree((state) => state.pointer)
@@ -31,7 +63,6 @@ function SneakerRig({ reducedMotion }: SneakerRigProps) {
     if (!group) return
 
     if (reducedMotion) {
-      // Reduced motion: static product pose, skip idle/pointer writes.
       group.rotation.x = 0
       group.rotation.y = -0.5
       group.position.y = 0
@@ -41,7 +72,6 @@ function SneakerRig({ reducedMotion }: SneakerRigProps) {
     // Idle float: sine on the elapsed clock.
     group.position.y = Math.sin(state.clock.elapsedTime * 1.4) * 0.18
 
-    // Pointer parallax with damped lerp toward pointer-derived targets, anchored to the base yaw.
     const lerpFactor = Math.min(1, delta * 4)
     const targetY = -0.5 + pointer.x * 0.55
     group.rotation.y += (targetY - group.rotation.y) * lerpFactor
@@ -59,6 +89,18 @@ function SneakerRig({ reducedMotion }: SneakerRigProps) {
     return shape
   }, [])
 
+  // Laces ride the vamp surface; slope increases toward the toe.
+  const laces = useMemo(
+    () => [
+      { z: -0.6, y: 0.82, tilt: 0.08 },
+      { z: -0.3, y: 0.86, tilt: 0.05 },
+      { z: 0, y: 0.88, tilt: 0 },
+      { z: 0.3, y: 0.86, tilt: -0.05 },
+      { z: 0.6, y: 0.8, tilt: -0.1 },
+    ],
+    [],
+  )
+
   return (
     <group ref={groupRef}>
       {/* Sole: extruded rounded slab. */}
@@ -66,22 +108,33 @@ function SneakerRig({ reducedMotion }: SneakerRigProps) {
         <meshStandardMaterial color={SOLE_COLOR} roughness={0.65} />
       </RoundedBox>
 
-      {/* Upper: scaled sphere (flattened ellipsoid). */}
-      <mesh position={[0, 0.55, 0.05]} scale={[0.95, 0.45, 1.65]}>
+      {/* Upper: flattened ellipsoid, widened for a fuller silhouette. */}
+      <mesh position={[0, 0.55, 0.05]} scale={[1.05, 0.45, 1.65]}>
         <sphereGeometry args={[0.8, 48, 32]} />
         <meshStandardMaterial color={UPPER_COLOR} roughness={0.5} />
       </mesh>
 
-      {/* Swoosh-like check: generic check path, extruded, facing sideways on the upper side. */}
-      <mesh rotation={[0, Math.PI / 2, 0]} position={[0.7, 0.45, 0]} scale={0.7}>
+      {/* Toe cap: flattened sphere segment at the front. */}
+      <mesh position={[0, 0.38, 1.35]} scale={[1.02, 0.32, 0.55]}>
+        <sphereGeometry args={[0.5, 32, 24]} />
+        <meshStandardMaterial color="#1c1c1c" roughness={0.55} />
+      </mesh>
+
+      {/* Heel counter: blocky extruded heel at the back. */}
+      <RoundedBox args={[0.82, 0.42, 0.34]} radius={0.09} smoothness={4} position={[0, 0.62, -1.18]}>
+        <meshStandardMaterial color="#1c1c1c" roughness={0.6} />
+      </RoundedBox>
+
+      {/* Swoosh-like check facing the side face. */}
+      <mesh rotation={[0, Math.PI / 2, 0]} position={[0.78, 0.45, 0]} scale={0.7}>
         <extrudeGeometry args={[checkShape, { depth: 0.04, bevelEnabled: false }]} />
         <meshStandardMaterial color={VOLT} roughness={0.35} />
       </mesh>
 
-      {/* Laces: small toruses standing vertically across the vamp, tube tops above the upper surface. */}
-      {[-0.7, -0.35, 0, 0.35, 0.7].map((z) => (
-        <mesh key={z} rotation={[Math.PI / 2, 0, 0]} position={[0, 0.94, z]}>
-          <torusGeometry args={[0.05, 0.016, 12, 24]} />
+      {/* Laces: toruses tilted to follow the vamp slope. */}
+      {laces.map(({ z, y, tilt }) => (
+        <mesh key={z} rotation={[Math.PI / 2 + tilt, 0, 0]} position={[0, y, z]}>
+          <torusGeometry args={[0.075, 0.02, 12, 24]} />
           <meshStandardMaterial color={VOLT} roughness={0.5} />
         </mesh>
       ))}
@@ -99,15 +152,25 @@ export default function Sneaker3D() {
 
   return (
     <Canvas
-      camera={{ position: [0, 0, 6], fov: 45 }}
+      camera={{ position: [0, 0.4, 6], fov: 42 }}
       scene={scene}
       dpr={[1, 2]}
       frameloop={reducedMotion ? 'demand' : 'always'}
-      fallback={<p className="hero__canvas-fallback">Loading the drop…</p>}
+      fallback={
+        <div className="hero__canvas-fallback">
+          <SneakerLineArt />
+        </div>
+      }
     >
       <ambientLight intensity={0.4} />
-      <directionalLight position={[4, 6, 5]} intensity={0.9} />
-      <pointLight position={[2, 2, 2]} intensity={6} color={VOLT} />
+      <directionalLight position={[4, 6, 5]} intensity={0.7} />
+      <spotLight position={[-2, 5, 4]} angle={0.5} penumbra={0.8} intensity={80} color="#ffffff" />
+      <pointLight position={[-2, 3, 2]} intensity={2.5} color={VOLT} />
+      {/* Ground contact shadow plane */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.02, 0]}>
+        <circleGeometry args={[1.6, 32]} />
+        <meshBasicMaterial color="#000000" transparent opacity={0.5} />
+      </mesh>
       <SneakerRig reducedMotion={reducedMotion} />
     </Canvas>
   )
