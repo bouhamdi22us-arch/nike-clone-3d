@@ -9,6 +9,8 @@ export interface Product {
   colors: string[]
   /** CSS gradient used as the procedural product art until real renders land. */
   gradient: string
+  /** Optional corner badge, e.g. NEW. */
+  badge?: string
 }
 
 export const productCategories: ProductCategory[] = [
@@ -25,6 +27,7 @@ export const products: Product[] = [
   // --- Shoes (6) -----------------------------------------------------------
   {
     id: 'air-volt-runner',
+    badge: 'NEW',
     name: 'Air Volt Runner',
     category: 'Shoes',
     price: 149.99,
@@ -97,6 +100,7 @@ export const products: Product[] = [
   },
   {
     id: 'windrunner-jacket',
+    badge: 'NEW',
     name: 'Windrunner Jacket',
     category: 'Apparel',
     price: 119.99,
@@ -129,6 +133,7 @@ export const products: Product[] = [
   // --- Accessories (2) -----------------------------------------------------
   {
     id: 'heritage-backpack',
+    badge: 'NEW',
     name: 'Heritage Backpack',
     category: 'Accessories',
     price: 59.99,

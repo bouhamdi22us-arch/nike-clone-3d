@@ -26,13 +26,16 @@ export default function Story() {
       <div className="container">
         <ul className="story__stats">
           <li className="story__stat">
-            <p className="story__stat-value">40+ YEARS OF SPORT</p>
+            <p className="story__stat-value">40+</p>
+            <p className="story__stat-label">Legendary lines</p>
           </li>
           <li className="story__stat">
-            <p className="story__stat-value">12 PRODUCTS</p>
+            <p className="story__stat-value">12</p>
+            <p className="story__stat-label">Silhouettes</p>
           </li>
           <li className="story__stat">
-            <p className="story__stat-value">1 MISSION</p>
+            <p className="story__stat-value">1</p>
+            <p className="story__stat-label">One mission</p>
           </li>
         </ul>
       </div>
