@@ -17,13 +17,19 @@ const HELP_LINKS: FooterLink[] = [
   { label: 'Size guide', href: '#', ariaLabel: 'Size guide' },
 ]
 
+const FOLLOW_LINKS: FooterLink[] = [
+  { label: 'Instagram', href: '#', ariaLabel: 'NIKE Clone on Instagram' },
+  { label: 'X', href: '#', ariaLabel: 'NIKE Clone on X' },
+  { label: 'YouTube', href: '#', ariaLabel: 'NIKE Clone on YouTube' },
+]
+
 export default function Footer() {
   return (
     <footer className="site-footer">
       <div className="container site-footer__inner">
         <div className="site-footer__brand">
           <p className="site-footer__wordmark">
-            NIKE<span className="site-footer__wordmark-accent">*</span>
+            NIKE<span className="site-footer__wordmark-accent">.</span>
           </p>
           <p className="site-footer__tag">Just do it. Then move again.</p>
         </div>
@@ -35,6 +41,19 @@ export default function Footer() {
               {SHOP_LINKS.map((link) => (
                 <li key={link.label}>
                   <a href={link.href}>{link.label}</a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="site-footer__col">
+            <h3 className="site-footer__heading">Follow</h3>
+            <ul className="site-footer__list">
+              {FOLLOW_LINKS.map((link) => (
+                <li key={link.label}>
+                  <a href={link.href} aria-label={link.ariaLabel}>
+                    {link.label}
+                  </a>
                 </li>
               ))}
             </ul>

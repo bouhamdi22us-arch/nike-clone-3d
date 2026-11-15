@@ -11,11 +11,12 @@ export default function Header({ onCartOpen }: HeaderProps) {
     <header className="site-header">
       <div className="container site-header__inner">
         <div className="site-header__wordmark">
-          NIKE<span className="site-header__wordmark-accent">*</span>
+          NIKE<span className="site-header__wordmark-accent">.</span>
         </div>
 
         <nav className="site-header__nav" aria-label="Primary">
-          <a href="#shop">Shop</a>
+          <a href="#shop">New</a>
+          <a href="#shop">Collection</a>
           <a href="#story">Story</a>
         </nav>
 

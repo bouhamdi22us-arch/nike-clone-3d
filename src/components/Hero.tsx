@@ -12,9 +12,15 @@ export default function Hero() {
             <span className="hero__accent">IF YOU DARE.</span>
           </h1>
           <p className="hero__sub">A procedural 3D sneaker engineered without limits.</p>
-          <a className="btn btn--volt" href="#shop">
-            Shop now
-          </a>
+          <div className="hero__ctas">
+            <a className="btn btn--volt" href="#shop">
+              Shop now
+            </a>
+            <a className="btn btn--ghost" href="#shop">
+              Find your size
+            </a>
+          </div>
+          <p className="hero__micro">Free shipping over $150 — 30-day returns</p>
         </div>
         <div className="hero__stage" aria-hidden="true">
           <Sneaker3D />
@@ -22,9 +28,9 @@ export default function Hero() {
       </div>
       <div className="hero__marquee" aria-hidden="true">
         <div className="hero__marquee-track">
-          {Array.from({ length: 20 }, (_, i) => (
+          {Array.from({ length: 6 }, (_, i) => (
             <span key={i} className="hero__marquee-item" aria-hidden="true">
-              JUST DO IT — MOVE FAST — BREAK BARRIERS
+              JUST DO IT <span className="hero__marquee-sep">·</span> MOVE FAST <span className="hero__marquee-sep">·</span> BREAK BARRIERS
             </span>
           ))}
         </div>

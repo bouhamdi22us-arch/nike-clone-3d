@@ -65,7 +65,7 @@ export default function Newsletter() {
               aria-invalid={error ? true : undefined}
               aria-describedby={error ? 'newsletter-email-error' : undefined}
             />
-            <button className="btn btn--ink newsletter__submit" type="submit">
+            <button className="btn btn--volt newsletter__submit" type="submit">
               Sign up
             </button>
           </div>
